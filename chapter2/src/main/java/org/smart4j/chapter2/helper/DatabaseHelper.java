@@ -18,6 +18,8 @@ import java.util.Properties;
 public class DatabaseHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHelper.class);
 
+    private static final ThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new ThreadLocal<Connection>();
+
     private static final QueryRunner QUERY_RUNNER = new QueryRunner();
 
     private static final String DRIVER;
@@ -40,11 +42,16 @@ public class DatabaseHelper {
     }
 
     public static Connection getConnection() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            LOGGER.error("query sql exception", e);
+        Connection conn = CONNECTION_THREAD_LOCAL.get();
+        if (conn == null) {
+            try {
+                conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            } catch (SQLException e) {
+                LOGGER.error("query sql exception", e);
+                throw new RuntimeException(e);
+            } finally {
+                CONNECTION_THREAD_LOCAL.set(conn);
+            }
         }
         return conn;
     }
