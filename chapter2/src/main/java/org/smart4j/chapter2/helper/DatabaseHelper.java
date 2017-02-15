@@ -1,5 +1,7 @@
 package org.smart4j.chapter2.helper;
 
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.smart4j.chapter2.model.Customer;
@@ -15,6 +17,8 @@ import java.util.Properties;
  */
 public class DatabaseHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHelper.class);
+
+    private static final QueryRunner QUERY_RUNNER = new QueryRunner();
 
     private static final String DRIVER;
     private static final String URL;
@@ -53,6 +57,21 @@ public class DatabaseHelper {
                 LOGGER.error("close connection failure", e);
             }
         }
+    }
+
+    public static <T> List<T> queryEntityList(Class<T> entityClass, String sql, Object... params) {
+        List<T> entityList = null;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            entityList = QUERY_RUNNER.query(conn, sql, new BeanListHandler<T>(entityClass), params);
+        } catch (SQLException e) {
+            LOGGER.error("query entity list failure", e);
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection(conn);
+        }
+        return entityList;
     }
 
 }
