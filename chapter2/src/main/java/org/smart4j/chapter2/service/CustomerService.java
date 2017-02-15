@@ -2,6 +2,7 @@ package org.smart4j.chapter2.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.smart4j.chapter2.helper.DatabaseHelper;
 import org.smart4j.chapter2.model.Customer;
 import org.smart4j.chapter2.util.PropertiesUtil;
 
@@ -18,31 +19,12 @@ public class CustomerService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
 
-    private static final String DRIVER;
-    private static final String URL;
-    private static final String USERNAME;
-    private static final String PASSWORD;
-
-    static {
-        Properties conf = PropertiesUtil.loadProperties("config.properties");
-        DRIVER = conf.getProperty("jdbc.driver");
-        URL = conf.getProperty("jdbc.url");
-        USERNAME = conf.getProperty("jdbc.username");
-        PASSWORD = conf.getProperty("jdbc.password");
-
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("can not load jdbc driver", e);
-        }
-    }
-
     public List<Customer> getCustomerList(String keyword) {
         Connection conn = null;
         try {
             List<Customer> customerList = new ArrayList<Customer>();
             String sql = "SELECT * FROM customer";
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = DatabaseHelper.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -59,13 +41,7 @@ public class CustomerService {
         } catch (SQLException e) {
             LOGGER.error("query sql exception", e);
         } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("close connection failure", e);
-                }
-            }
+            DatabaseHelper.closeConnection(conn);
         }
         return null;
     }
