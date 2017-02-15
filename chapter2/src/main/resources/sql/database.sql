@@ -3,7 +3,7 @@ CREATE TABLE demo.customer (
   name varchar(50) DEFAULT NULL COMMENT '客户姓名',
   contact varchar(255) DEFAULT NULL COMMENT '联系人',
   telephone varchar(255) DEFAULT NULL COMMENT '手机号码',
-  eamil varchar(255) DEFAULT NULL COMMENT '邮箱地址',
+  email varchar(255) DEFAULT NULL COMMENT '邮箱地址',
   remark text DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (id)
 )
@@ -15,7 +15,7 @@ CREATE TABLE demo.customer (
 
 
 SET NAMES 'utf8';
-INSERT INTO demo.customer(id, name, contact, telephone, eamil, remark) VALUES
+INSERT INTO demo.customer(id, name, contact, telephone, email, remark) VALUES
   (1, '张三', '李四', '1234567890', 'lisi@163.com', NULL);
-INSERT INTO demo.customer(id, name, contact, telephone, eamil, remark) VALUES
+INSERT INTO demo.customer(id, name, contact, telephone, email, remark) VALUES
   (2, '王五', '赵六', '1234567890', 'zhaoliu@163.com', NULL);
