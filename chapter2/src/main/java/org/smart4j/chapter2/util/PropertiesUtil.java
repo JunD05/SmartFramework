@@ -27,6 +27,7 @@ public class PropertiesUtil {
             properties.load(is);
         } catch (IOException e) {
             LOGGER.error("load properties file failure", e);
+            throw new RuntimeException(e);
         } finally {
             if (is != null) {
                 try {
