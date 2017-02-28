@@ -18,10 +18,10 @@ public class ControllerHelper {
 
     static {
         Set<Class<?>> controllerClassSet = ClassHelper.getControllerClassSet();
-        if(controllerClassSet != null && !controllerClassSet.isEmpty()) {
+        if (controllerClassSet != null && !controllerClassSet.isEmpty()) {
             for (Class<?> controllerClass : controllerClassSet) {
                 Method[] methods = controllerClass.getDeclaredMethods();
-                if(ArrayUtils.isNotEmpty(methods)) {
+                if (ArrayUtils.isNotEmpty(methods)) {
                     for (Method method : methods) {
                         if (method.isAnnotationPresent(Action.class)) {
                             Action action = method.getAnnotation(Action.class);
@@ -44,7 +44,7 @@ public class ControllerHelper {
     }
 
 
-    public static Handler getHandler (String requestMethod, String requestPath) {
+    public static Handler getHandler(String requestMethod, String requestPath) {
         Request request = new Request(requestMethod, requestPath);
         return ACTION_MAP.get(request);
     }
